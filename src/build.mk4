@@ -1,0 +1,53 @@
+-- lua script based on:
+--- https://tex.stackexchange.com/questions/506578/blogging-in-latex/506587#506587
+--- https://github.com/michal-h21/tex4ht-enhanced-web/blob/master/thesis.mk4
+
+-- TODO: outdir not used (use `make4ht -d outdir`), check if removable
+local outdir = "build"
+local domfilter = require "make4ht-domfilter"
+
+-- remove the \maketitle environment from the HTML file, title will be inserted in the template
+local domprocess = domfilter{function(dom)
+  -- TODO: DOM manipulations
+  -- local maketitles = dom:query_selector(".maketitle")
+  -- for _, el in ipairs(maketitles) do
+  --   print "removing maketitle"
+  --   el:remove_node()
+  -- end
+  return dom
+end}
+
+filter_settings "staticsite" {
+  site_root = outdir,
+  map = {
+    [".css$"] = "css/"
+  },
+  header = {
+     layout="post",
+     date = function(parameters)
+       return os.date("!%Y-%m-%d %T", parameters.time)
+     end
+  }
+}
+
+-- NOTE: 'mode' is specified using `make4ht -m <mode>`
+Make:enable_extension "common_domfilters"
+if mode=="draft" then
+  Make:htlatex {}
+elseif mode=="publish" then
+  -- TODO: not currently used, from original example
+  Make:match("html$", domprocess)
+  Make:enable_extension "html5"
+  Make:enable_extension "staticsite"
+  Make:htlatex {}
+else
+  -- ful LaTeX build process, including bibliography linking
+  Make:match("html$", domprocess)
+  Make:enable_extension "html5"
+  Make:enable_extension "staticsite"
+  Make:add("bibtex", "bibtex ${input}")
+  Make:htlatex {}
+  Make:bibtex {}
+  Make:htlatex {}
+  Make:htlatex {}
+end
