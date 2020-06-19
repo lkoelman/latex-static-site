@@ -3,10 +3,39 @@
 A template for converting your LaTeX document into a static website.
 
 The process of turning the original LaTeX source code into a
-static website is quite straightforward, making use of
-[tex4ht](https://tug.org/tex4ht/)/[make4ht](https://github.com/michal-h21/make4ht). There were some tricky parts however, and some of the answers and examples on the web are outdated. To provide a template for others, I described the conversion and publishing process below.
+static website is quite straightforward, making use of [make4ht](https://github.com/michal-h21/make4ht) for [tex4ht](https://tug.org/tex4ht/)/. There were some tricky parts however, and some of the answers and examples on the web are outdated. To provide a template for others, I described the conversion and publishing process below.
 
-# HOWTO
+# Usage
+
+Simple usage
+
+```bash
+# clone the repository
+git clone https://github.com/lkoelman/latex-static-site.git my-site
+cd my-site
+
+# creat the gh-pages branch for publishing
+git checkout -b gh-pages
+
+# import your latex documents and rename it
+mv path/to/document.tex src/index.tex
+
+# preprocess your tex files (see below)
+your-preprocess-script.sh
+
+# build the static site html
+src/build.sh
+
+# publish to github-pages (after creating repository)
+git remote add published https://github.com/username/my-site.git 
+git add -A
+git commit -m "Add source and generated html"
+git push -u published gh-pages
+
+# navigate to github repository > Settings > GitHub pages > select branch 'gh-pages'
+```
+
+# Usage (detailed)
 
 Steps to convert your LaTeX document:
 
@@ -20,7 +49,7 @@ Install TexLive latex distribution > 2019. You want a recent version in order to
     - required for links between pages to work (refs. to `index.html`)
 
 - remove latex imports specific to PDF generation
-    - this functionality won't be used and increases the probability of breaking the tex4ht build process
+    - they won't be used and only increases the likelihood of breaking the tex4ht build process
 
 - remove commands that don't play well with MathJax:
     - `\mathrm`, `\textrm`, `rm`
