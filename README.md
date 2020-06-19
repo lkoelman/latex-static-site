@@ -18,7 +18,7 @@ cd my-site
 git checkout -b gh-pages
 
 # import your latex documents and rename it
-mv path/to/document.tex src/index.tex
+cp path/to/document.tex src/index.tex
 
 # preprocess your tex files (see below)
 your-preprocess-script.sh
@@ -47,7 +47,7 @@ Install TexLive latex distribution > 2019. You want a recent version in order to
 
 Rename your main tex file to `index.tex`. This is required for links between pages to work (refs. to `index.html`).
 
-Remove latex imports specific to PDF generation. They won't be used and only increases the likelihood of breaking the tex4ht build process.
+Remove latex imports specific to PDF generation. They won't be used and only increase the likelihood of breaking the tex4ht build process.
 
 Remove commands that don't play well with MathJax. Known commands are `\mathrm`, `\textrm`, `rm`. To do this automatically, you could use regular expressions or a preprocess script. For example, in Sublime Text editor you could use the following regular expressions in the 'replace in files' command: find: `\\mathrm\s*?\{(.+?)\}` -> replace: `$1`.
 
