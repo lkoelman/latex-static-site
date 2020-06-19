@@ -45,18 +45,14 @@ Install TexLive latex distribution > 2019. You want a recent version in order to
 
 ## Preprocess tex source files
 
-- rename your main tex file to `index.tex`
-    - required for links between pages to work (refs. to `index.html`)
+Rename your main tex file to `index.tex`. This is required for links between pages to work (refs. to `index.html`).
 
-- remove latex imports specific to PDF generation
-    - they won't be used and only increases the likelihood of breaking the tex4ht build process
+Remove latex imports specific to PDF generation. They won't be used and only increases the likelihood of breaking the tex4ht build process.
 
-- remove commands that don't play well with MathJax:
-    - `\mathrm`, `\textrm`, `rm`
-    - to do this automatically, you could for example use the following regular expressions with Sublime text's 'replace in files' function: find: `\\mathrm\s*?\{(.+?)\}` -> replace: `$1`
+Remove commands that don't play well with MathJax. Known commands are `\mathrm`, `\textrm`, `rm`. To do this automatically, you could use regular expressions or a preprocess script. For example, in Sublime Text editor you could use the following regular expressions in the 'replace in files' command: find: `\\mathrm\s*?\{(.+?)\}` -> replace: `$1`.
 
-- use simple bibtex for citations. Don't use biblatex or natbib.
-    - Bibliography styles `unsrt`, `plain`, and `plainurl` worked well for me. More complex ones like `agsm` produced htlatex errors.
+Use simple bibtex for citations. Don't use biblatex or natbib.
+Bibliography styles `unsrt`, `plain`, and `plainurl` worked well for me. More complex ones like `agsm` produced htlatex errors.
 
 ## Configure build process
 
@@ -65,8 +61,7 @@ I based my configuration files on https://github.com/michal-h21/tex4ht-enhanced-
 - `src/config.cfg` - make4ht config file
 - `src/build.mk4` - make4ht build file
 
-Crucially, in order for compilation of the static html site structure to work, I needed to explicitly specify the output directory and build file in the `make4ht` command. My final build command was `make4ht -c config.cfg -e build.mk4 -d out index.tex "mathjax`.
-This is the command executed by `build.sh`
+Crucially, in order for compilation of the static html site structure to work, I needed to explicitly specify the output directory and build file in the `make4ht` command. My final build command was `make4ht -c config.cfg -e build.mk4 -d out index.tex "mathjax`, which is the command executed by `build.sh`.
 
 ## Deploy to github pages
 
